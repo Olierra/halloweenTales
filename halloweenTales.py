@@ -23,6 +23,8 @@ from re import T
 from sys import exit
 from os import system
 from random import choice
+from re import match
+from tkinter import YES
 
 def main():
     storyList = {
@@ -33,22 +35,22 @@ def main():
             },
         '2': {
             'title':'The Best Costume of the Night',
-            'body':'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         },
         '3': {
             'title':'Family Pumpkin Carving',
-            'body':'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         },
         '4': {
             'title':'Scary Story Night',
-            'body' : 'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         },
         '5': {
             'title':'Baking Ghosts?!?',
-            'body':'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         }
     }
@@ -105,14 +107,17 @@ def getUserText(story):
         tempInput = input(f'Please enter ' + key + ": ")
         replacementList[key] = tempInput
         
-    return(replaceText(userStoryBody, replacementList))
+    return(replaceText(userStoryTitle, userStoryBody, replacementList))
 
-def replaceText(story, userInputs):
-    originalText = story
+def replaceText(storyTitle, storyBody, userInputs):
+    newStoryBody = storyBody
     replacementWords = userInputs
     for key in replacementWords:
-        originalText = originalText.replace(key, replacementWords[key])
-    return print(originalText)
+        newStoryBody = newStoryBody.replace(key, replacementWords[key])
+    print(newStoryBody)
+    saveRequest = ''
+    while not match('YES', saveRequest.upper) or match('NO', saveRequest.upper):
+        saveRequest = input('Would you like to save your story? ')    
 
 main()
 
