@@ -31,7 +31,7 @@ def main():
     userChoice = 0
 
     try:
-        while int(userChoice) not in menuRange:
+        while int(userChoice) not in menuRange: #while the user hasn't chose a number between 1 and 4, keep reprinting the menu
             system('cls') #clears the screen. Make sure you start without debugging or it doesn't work.
             print('welcome to Halloween Tales!\n')
             print('1. Choose a Story.')
@@ -39,7 +39,7 @@ def main():
             print('3. Read a Finished Story.')
             print('4. Exit\n')
 
-            userChoice = input('Please choose an option from the menu: ')
+            userChoice = int(input('Please choose an option from the menu: ')) #Any value here not a number throws the error we're catching below.
     except:
         system('cls') #clears the screen. Make sure you start without debugging or it doesn't work.
         print('welcome to Halloween Tales!\n')
@@ -71,7 +71,11 @@ def replaceText(story, textDictionary):
     return print(originalText)
 
 def getUserText():
-
+    userStory = ''
+    userDictionary = {
+        'a': 'b',
+        'c': 'd'
+    }
     return(replaceText(userStory, userDictionary))
 
 main()
