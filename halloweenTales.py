@@ -25,24 +25,38 @@ def main():
         chmod = 'chmod 755 ./halloweenTales.py'
         system(chmod)
         user = system('whoami')
-        pathToStories = f'/home/{user}/stories/'
+        pathToStories = f'/home/{user}/halloweenTales/stories/'
+        pathToLogs = f'/home/{user}/halloweenTales/logs'
         if not path.exists(pathToStories):
-            system(f'mkdir /home/{user}/stories/')
-            system(f'chmod 744 /home/{user}/stories/')
-    else:
+            system(f'mkdir /home/{user}/halloweenTales/stories/')
+            system(f'chmod 744 /home/{user}/halloweenTales/stories/')
+        if not path.exists(pathToLogs):
+            system(f'mkdir /home/{user}/halloweenTales/logs/')
+            system(f'chmod 744 /home/{user}/halloweenTales/logs/')
+    else: #Would need an elif to check for Unix-based OS, like Mac. I don't have one, so I wouldn't be able to test this anyway, so only coding for Linux and Windows.
         clear = 'cls'
         if path.exists(path.expanduser('~\\OneDrive\\Documents\\')): #Checking if the user is using OneDrive to backup Documents. We'll put the stories in there if they are.
             try:
-                pathToStories = path.expanduser('~\\OneDrive\\Documents\\stories\\')
+                pathToStories = path.expanduser('~\\OneDrive\\Documents\\Halloween_Tales\\stories\\')
                 system(f'md {pathToStories}') #This will fail if the directory already exists, so we're catching it and just setting the path to the directory.
             except:
-                pathToStories = path.expanduser('~\\OneDrive\\Documents\\stories\\')
+                pathToStories = path.expanduser('~\\OneDrive\\Documents\\Halloween_Tales\\stories\\')
+            try:
+                pathToLogs = path.expanduser('~\\OneDrive\\Documents\\Halloween_Tales\\logs\\')
+                system(f'md {pathToLogs}')
+            except:
+                pathToLogs = path.expanduser('~\\OneDrive\\Documents\\Halloween_Tales\\logs\\')
         else: #Otherwise, we're saving them in the old Documents folder.
             try:
-                pathToStories = path.expanduser('~\\Documents\\stories\\')
+                pathToStories = path.expanduser('~\\Documents\\Halloween_Tales\\stories\\')
                 system(f'md {pathToStories}') #This will fail if the directory already exists, so we're catching it and just setting the path to the directory.
             except:
-                pathToStories = path.expanduser('~\\Documents\\stories\\')
+                pathToStories = path.expanduser('~\\Documents\\Halloween_Tales\\stories\\')
+            try:
+                pathToLogs = path.expanduser('~\\Documents\\Halloween_Tales\\logs\\')
+                system(f'md {pathToLogs}')
+            except:
+                pathToLogs = path.expanduser('~\\Documents\\Halloween Tales\\logs\\')
     
     #To save time on this project, I've 'gracefully' lifted some stories from Woo Jr. Link: https://woojr.com/halloween-ad-libs/ Note: These are not mine and would be replaced in a final version.
     storyList = {
@@ -85,18 +99,18 @@ def main():
     if userChoice == 1:
         print(clear)
         system(clear)
-        storyMenu(storyList, clear, pathToStories)
+        storyMenu(storyList, clear, pathToStories, pathToLogs)
     elif userChoice == 2:
         system(clear)
-        getUserText(storyList[choice(list(storyList))], clear, pathToStories)
+        getUserText(storyList[choice(list(storyList))], clear, pathToStories, pathToLogs)
     elif userChoice == 3:
         system(clear)
-        readStories(storyList, clear, pathToStories)
+        readStories(storyList, clear, pathToStories, pathToLogs)
     elif userChoice == 4:
         return 0
     return 0
 
-def storyMenu(storyList, clear, pathToStories):
+def storyMenu(storyList, clear, pathToStories, pathToLogs):
     stories = storyList
     storyRange = range(1,(len(stories)+1))
     storyChoice = 0
@@ -109,9 +123,9 @@ def storyMenu(storyList, clear, pathToStories):
             storyChoice = int(input('\nPlease choose a story: '))
         except:
             continue
-    return getUserText(stories[str(storyChoice)], clear, pathToStories)
+    return getUserText(stories[str(storyChoice)], clear, pathToStories, pathToLogs)
     
-def readStories(storyList, clear, pathToStories):
+def readStories(storyList, clear, pathToStories, pathToLogs):
     system(clear)
     storiesToRead = listdir(pathToStories)
     userChoice = ''
@@ -121,7 +135,7 @@ def readStories(storyList, clear, pathToStories):
             match userChoice.lower(): #Python 3.10+ feature. Make sure you have the correct version before running this script.
                 case 'yes' | 'y':
                     system(clear)
-                    getUserText(storyList[choice(list(storyList))], clear, pathToStories)
+                    getUserText(storyList[choice(list(storyList))], clear, pathToStories, pathToLogs)
                 case 'no' | 'n':
                     userChoice = input('Are you sure you don\'t want to start a story? Enter no or n again to confirm: ')
                     if userChoice.lower() == 'no' or userChoice.lower() == 'n':
@@ -150,7 +164,7 @@ def readStories(storyList, clear, pathToStories):
                 userChoice = input('\n\n1. Read another story.\n2. Return to main menu.\n3. Exit\n\nPlease choose an option: ')    
                 match userChoice:
                     case '1':
-                        readStories(storyList, clear, pathToStories)
+                        readStories(storyList, clear, pathToStories, pathToLogs)
                     case '2':
                         main()
                     case '3':
@@ -160,7 +174,7 @@ def readStories(storyList, clear, pathToStories):
                         continue
     return 0    
 
-def getUserText(story, clear, pathToStories):
+def getUserText(story, clear, pathToStories, pathToLogs):
     userStoryTitle = story['title']
     userStoryBody = story['body']
     userDictionary = story['inputs']
@@ -172,9 +186,9 @@ def getUserText(story, clear, pathToStories):
         tempInput = input(f'Please enter ' + key + ": ")
         replacementList[key] = tempInput
         
-    return(replaceText(userStoryTitle, userStoryBody, replacementList, clear, pathToStories))
+    return(replaceText(userStoryTitle, userStoryBody, replacementList, clear, pathToStories, pathToLogs))
 
-def replaceText(storyTitle, storyBody, userInputs, clear, pathToStories):
+def replaceText(storyTitle, storyBody, userInputs, clear, pathToStories, pathToLogs):
     newStoryBody = storyBody
     replacementWords = userInputs
     for key in replacementWords:
@@ -182,9 +196,9 @@ def replaceText(storyTitle, storyBody, userInputs, clear, pathToStories):
     system(clear)
     print(f'{newStoryBody}\n\n')
     
-    return (saveStory(storyTitle, newStoryBody, clear, pathToStories))
+    return (saveStory(storyTitle, newStoryBody, clear, pathToStories, pathToLogs))
 
-def saveStory(storyTitle, newStoryBody, clear, pathToStories):
+def saveStory(storyTitle, newStoryBody, clear, pathToStories, pathToLogs):
     saveRequest = ''
     while not (saveRequest.lower() == 'yes' or saveRequest.lower() == 'y' or saveRequest.lower() == 'no' or saveRequest.lower() == 'n'):
         saveRequest = input('Do you want to save? Enter yes or y to save, and no or n to not save: ')
@@ -198,6 +212,8 @@ def saveStory(storyTitle, newStoryBody, clear, pathToStories):
                 except:
                     saveRequest = input('Oh, it looks like you\'ve aready completed this story. Would you like to keep your new version instead? ')
                     if saveRequest.lower() == 'yes' or saveRequest.lower() == 'y':
+                        if platform == 'Linux':
+                            system(f'mv {pathToStories}{storyTitle}.txt {pathToLogs}{storyTitle}.bak')
                         with open(rf'{pathToStories}{storyTitle}.txt', 'w') as saveStory:
                             saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
                             print(f'You replaced the old story of {storyTitle} with your new version.')
