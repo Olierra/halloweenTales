@@ -10,8 +10,7 @@
 
 """
     #TODO
-    #On Read Saved Stories, list the name of the stories and ask the user to pick one, then display the story.
-    #Ensure proper return and exit values.
+    #Build deeper error handling for bad inputs. For example, check if the entered adjective needs to be preceded with an 'an' instead of an 'a'.
 """
 
 from sys import exit, platform
