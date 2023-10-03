@@ -15,7 +15,7 @@
 """
 
 from sys import exit, platform
-from os import system, path
+from os import listdir, system, path
 from random import choice
 
 def main():
@@ -49,7 +49,7 @@ def main():
     storyList = {
         '1': { #https://woojr.com/wp-content/uploads/2017/10/mad-scientist-adlib-print.jpg
             'title':'My Substitute Teacher is a Mad Scientist',
-            'body':'Today we had a substitute teacher for science class, with a color hair that a verb (past tense) straight up a number inches high. His name was Mr. an animal and he said he\'d show us why science was the most an adjective class. First, he used a a tool and a a vegetable to make a a container of water turn another color. Then he made a a noun of the solar system using a fruit, a candy, and another noun. When the principal walked by and saw the substitute teacher using a third noun to a verb the some furniture into a third color a plural noun, she asked him to show the class a movie about another plural noun instead. The next day, we had a different substitute teacher.',
+            'body':'Today we had a substitute teacher for science class, with a color hair that a verb (past tense) straight up a number inches high. His name was Mr. an animal and he said he\'d show us why science was the most an adjective class. First, he used a a tool and a a vegetable to make a a container of water turn another color. Then he made a a noun of the solar system using a a fruit, a a candy, and a another noun. When the principal walked by and saw the substitute teacher using a a third noun to a verb the some furniture into a third color a plural noun, she asked him to show the class a movie about another plural noun instead. The next day, we had a different substitute teacher.',
             'inputs': {'a color':'PH1','a verb (past tense)':'PH2','a number':'PH3','an animal':'PH4','an adjective':'PH5','a tool':'PH6','a vegetable':'PH7','a container':'PH8','another color':'PH9','a noun':'PH10','a fruit':'PH11','a candy':'PH12','another noun':'PH13','a third noun':'PH14','a verb':'PH15','some furniture':'PH16','a third color':'PH17','a plural noun':'PH18','another plural noun':'PH19'}
             },
         '2': { #https://woojr.com/wp-content/uploads/2017/10/skeletons-ad-libs-for-kids.jpg
@@ -59,7 +59,7 @@ def main():
         },
         '3': { #https://woojr.com/wp-content/uploads/2017/10/ad-libs-for-Halloween.jpg
             'title':'My School Gets Pretty Weird at Halloween',
-            'body':'My school is pretty an adjective for most of the year, except in late October, when another adjective cobwebs appear in the hallway, with really a third adjective an animals hanging from them. The lunch room has orange and black a plural noun everywhere, and they serve roasted a part of the body for lunch. Someone told me that a giant a fourth noun another animal took over the principal\'s office. All of the teachers look different; one is a zombie with a color hair, another is a a fifth adjective a noun, and I think my school subject teacher is a a vehicle now. Tombstones line the hallways, and one says "Here lies a name of someone in the room, who died of a verbing."',
+            'body':'My school is pretty an adjective for most of the year, except in late October, when another adjective cobwebs appear in the hallway, with really a third adjective an animals hanging from them. The lunch room has orange and black a plural noun everywhere, and they serve roasted a part of the body for lunch. Someone told me that a giant a fourth adjective another animal took over the principal\'s office. All of the teachers look different; one is a zombie with a color hair, another is a a fifth adjective a noun, and I think my school subject teacher is a a vehicle now. Tombstones line the hallways, and one says "Here lies a name of someone in the room, who died of a verbing."',
             'inputs': {'an adjective':'PH1','another adjective':'PH2','a third adjective':'PH3','an animal':'PH4','a plural noun':'PH5','a part of the body':'PH6','a fourth adjective':'PH7','another animal':'PH8','a color':'PH9','a fifth adjective':'PH10','a noun':'PH11','school subject':'PH12','a vehicle':'PH13','a name of someone in the room':'PH14','a verb':'PH15'}
         },
         '4': { #https://woojr.com/wp-content/uploads/2017/10/scary-halloween-ad-lib.jpg
@@ -92,7 +92,7 @@ def main():
         getUserText(storyList[choice(list(storyList))], clear, pathToStories)
     elif userChoice == 3:
         system(clear)
-        storyList(clear, pathToStories)
+        readStories(storyList, clear, pathToStories)
     elif userChoice == 4:
         print('Goodbye!')
         exit(0)
@@ -113,9 +113,37 @@ def storyMenu(storyList, clear, pathToStories):
             continue
     return getUserText(stories[str(storyChoice)], clear, pathToStories)
     
-def storyList(clear, pathToStories):
+def readStories(storyList, clear, pathToStories):
     system(clear)
-    return print('You made it to the story list!')
+    userChoice = ''
+    if len(listdir(pathToStories)) == 0:
+        while not (userChoice.lower() == 'yes' or userChoice.lower() == 'y' or userChoice.lower() == 'no' or userChoice.lower() == 'n'):
+            userChoice = input('Oh, it looks like you don\'t have any stories. Would you like to start a random story? ')
+            match userChoice.lower(): #Python 3.10+ feature. Make sure you have the correct version before running this script.
+                case 'yes' | 'y':
+                    system(clear)
+                    getUserText(storyList[choice(list(storyList))], clear, pathToStories)
+                case 'no' | 'n':
+                    userChoice = input('Are you sure you don\'t want to start a story? Enter no or n again to confirm: ')
+                    if userChoice.lower() == 'no' or userChoice.lower() == 'n':
+                        break
+                    else:
+                        continue
+                case _: #Wildcard. Not really needed here as we're looping if the user doesn't enter yes, y, no, or n, but a match case statement feels incomplete without it.
+                    continue
+    else:
+        storyRange = range(1, (len(listdir(pathToStories))+1))
+        print(storyRange)
+        while not userChoice in storyRange:
+            counter = 1
+            for story in listdir(pathToStories): #Thanks Builtin: https://builtin.com/data-science/python-list-files-in-directory
+                print(f'{counter}. {story}'.removesuffix('.txt')) #Thanks Visual Studio for the suggestion to remove the suffix!
+                counter += 1
+            try:
+                userChoice = int(input('Please choose a story to read: '))
+            except:
+                continue
+    return 0    
 
 def getUserText(story, clear, pathToStories):
     userStoryTitle = story['title']
@@ -150,21 +178,21 @@ def saveStory(storyTitle, newStoryBody, clear, pathToStories):
                 try:
                     with open(rf'{pathToStories}{storyTitle}.txt', 'x') as saveStory:
                         saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
-                        print(f'You saved {storyTitle} to {storyTitle}.txt')
+                        print(f'You saved "{storyTitle}" to {storyTitle}.txt\n')
                     break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
                 except:
                     saveRequest = input('Oh, it looks like you\'ve aready completed this story. Would you like to keep your new version instead? ')
-                    if saveRequest == 'yes' or saveRequest == 'y':
+                    if saveRequest.lower() == 'yes' or saveRequest.lower() == 'y':
                         with open(rf'{pathToStories}{storyTitle}.txt', 'w') as saveStory:
                             saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
                             print(f'You replaced the old story of {storyTitle} with your new version.')
                         break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
-                    elif saveRequest == 'no' or saveRequest == 'n':
-                        tempInput = input('We\'ll keep the original, then. Press any key to return to exit.')
+                    elif saveRequest.lower() == 'no' or saveRequest.lower() == 'n':
+                        tempInput = input('We\'ll keep the original, then. Press enter to continue.')
                         break
             case 'no' | 'n':
                 saveRequest = input('Are you sure you don\'t want to save your story? Enter no or n again to confirm: ')
-                if saveRequest.lower == 'no' or 'n':
+                if saveRequest.lower() == 'no' or saveRequest.lower() == 'n':
                     break
                 else:
                     continue
@@ -172,7 +200,7 @@ def saveStory(storyTitle, newStoryBody, clear, pathToStories):
                 continue
     menuChoice = ''
     while not (menuChoice.lower() == '1' or menuChoice.lower() == '2'):
-        system(clear)
+        #system(clear)
         print('1. Return to main menu.\n2. Exit\n\n')
         menuChoice = input('Please choose an option from above: ')
         match menuChoice.lower():
