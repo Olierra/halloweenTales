@@ -94,8 +94,7 @@ def main():
         system(clear)
         readStories(storyList, clear, pathToStories)
     elif userChoice == 4:
-        print('Goodbye!')
-        exit(0)
+        return 0
     return 0
 
 def storyMenu(storyList, clear, pathToStories):
@@ -115,8 +114,9 @@ def storyMenu(storyList, clear, pathToStories):
     
 def readStories(storyList, clear, pathToStories):
     system(clear)
+    storiesToRead = listdir(pathToStories)
     userChoice = ''
-    if len(listdir(pathToStories)) == 0:
+    if len(listdir(pathToStories)) == 0: #Checks to see if the directory is empty. We can read stories that haven't been written.
         while not (userChoice.lower() == 'yes' or userChoice.lower() == 'y' or userChoice.lower() == 'no' or userChoice.lower() == 'n'):
             userChoice = input('Oh, it looks like you don\'t have any stories. Would you like to start a random story? ')
             match userChoice.lower(): #Python 3.10+ feature. Make sure you have the correct version before running this script.
@@ -133,16 +133,32 @@ def readStories(storyList, clear, pathToStories):
                     continue
     else:
         storyRange = range(1, (len(listdir(pathToStories))+1))
-        print(storyRange)
         while not userChoice in storyRange:
             counter = 1
+            system(clear)
             for story in listdir(pathToStories): #Thanks Builtin: https://builtin.com/data-science/python-list-files-in-directory
                 print(f'{counter}. {story}'.removesuffix('.txt')) #Thanks Visual Studio for the suggestion to remove the suffix!
                 counter += 1
             try:
-                userChoice = int(input('Please choose a story to read: '))
+                userChoice = int(input('\nPlease choose a story to read: '))
             except:
                 continue
+        system(clear)
+        with open(rf'{pathToStories}{storiesToRead[(int(userChoice)-1)]}') as readStory:
+            print(readStory.read())
+            userChoice = '' #resetting userChoice for next menu
+            while not (userChoice == '1' or userChoice == '2' or userChoice == '3'):
+                userChoice = input('\n\n1. Read another story.\n2. Return to main menu.\n3. Exit\n\nPlease choose an option: ')    
+                match userChoice:
+                    case '1':
+                        readStories(storyList, clear, pathToStories)
+                    case '2':
+                        main()
+                    case '3':
+                        return 0
+                    case _:
+                        system(clear)
+                        continue
     return 0    
 
 def getUserText(story, clear, pathToStories):
@@ -211,5 +227,5 @@ def saveStory(storyTitle, newStoryBody, clear, pathToStories):
     return 0
 
 main()
-
+print('Goodbye!')
 exit(0)
