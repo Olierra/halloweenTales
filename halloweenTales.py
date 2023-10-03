@@ -4,6 +4,8 @@
     #This program asks the user to enter some words, then returns a fun story!
     Author ~ Chance Bailey
     Created ~ 02/10/2023
+    
+    #Note - this script uses a match/case block that requires Python 3.10 or higher.
 """
 
 """
@@ -30,15 +32,18 @@ def main():
             system(f'chmod 744 /home/{user}/stories/')
     else:
         clear = 'cls'
-        pathToStories = path.expanduser('~\\Documents\\stories')
         if path.exists(path.expanduser('~\\OneDrive\\Documents\\')): #Checking if the user is using OneDrive to backup Documents. We'll put the stories in there if they are.
-            if not path.exists(path.expanduser('~\\OneDrive\\Documents\\stories')):
-                pathToStories = path.expanduser('~\\OneDrive\\Documents\\stories')
-                print(pathToStories)
-                system(f'md {pathToStories}')
-        elif not path.exists('~\\Documents\\stories'): #Otherwise, we're saving them in the old Documents folder.
-            pathToStories = path.expanduser('~\\Documents\\stories')
-            system(f'md {pathToStories}')
+            try:
+                pathToStories = path.expanduser('~\\OneDrive\\Documents\\stories\\')
+                system(f'md {pathToStories}') #This will fail if the directory already exists, so we're catching it and just setting the path to the directory.
+            except:
+                pathToStories = path.expanduser('~\\OneDrive\\Documents\\stories\\')
+        else: #Otherwise, we're saving them in the old Documents folder.
+            try:
+                pathToStories = path.expanduser('~\\Documents\\stories\\')
+                system(f'md {pathToStories}') #This will fail if the directory already exists, so we're catching it and just setting the path to the directory.
+            except:
+                pathToStories = path.expanduser('~\\Documents\\stories\\')
     
     storyList = {
         '1': {
@@ -80,19 +85,19 @@ def main():
     if userChoice == 1:
         print(clear)
         system(clear)
-        storyMenu(storyList, clear)
+        storyMenu(storyList, clear, pathToStories)
     elif userChoice == 2:
         system(clear)
-        getUserText(storyList[choice(list(storyList))], clear)
+        getUserText(storyList[choice(list(storyList))], clear, pathToStories)
     elif userChoice == 3:
         system(clear)
-        storyList(clear)
+        storyList(clear, pathToStories)
     elif userChoice == 4:
         print('Goodbye!')
         exit(0)
     return 0
 
-def storyMenu(storyList, clear):
+def storyMenu(storyList, clear, pathToStories):
     stories = storyList
     storyRange = range(1,(len(stories)+1))
     storyChoice = 0
@@ -105,13 +110,13 @@ def storyMenu(storyList, clear):
             storyChoice = int(input('\nPlease choose a story: '))
         except:
             continue
-    return getUserText(stories[str(storyChoice)], clear)
+    return getUserText(stories[str(storyChoice)], clear, pathToStories)
     
-def storyList(clear):
+def storyList(clear, pathToStories):
     system(clear)
-    print('You made it to the story list!')
+    return print('You made it to the story list!')
 
-def getUserText(story, clear):
+def getUserText(story, clear, pathToStories):
     userStoryTitle = story['title']
     userStoryBody = story['body']
     userDictionary = story['inputs']
@@ -123,25 +128,42 @@ def getUserText(story, clear):
         tempInput = input(f'Please enter ' + key + ": ")
         replacementList[key] = tempInput
         
-    return(replaceText(userStoryTitle, userStoryBody, replacementList, clear))
+    return(replaceText(userStoryTitle, userStoryBody, replacementList, clear, pathToStories))
 
-def replaceText(storyTitle, storyBody, userInputs, clear):
+def replaceText(storyTitle, storyBody, userInputs, clear, pathToStories):
     newStoryBody = storyBody
     replacementWords = userInputs
     for key in replacementWords:
         newStoryBody = newStoryBody.replace(key, replacementWords[key])
     system(clear)
-    print(newStoryBody)
+    print(f'{newStoryBody}\n\n')
+    
     saveRequest = ''
-    while not saveRequest.lower == 'yes' or 'y' or 'no' or 'n':
-        system(clear)
-        saveRequest = input('Do you want to save? ')
-        match saveRequest.lower():
+    while not saveRequest.lower() == 'yes' or saveRequest.lower() == 'y' or saveRequest.lower() == 'no' or saveRequest.lower() == 'n':
+        saveRequest = input('Do you want to save? Enter yes or y to save, and no or n to not save: ')
+        match saveRequest.lower(): #Python 3.10+ feature. Make sure you have the correct version before running this script.
             case 'yes' | 'y':
-                print('you saved!')
+                try:
+                    with open(rf'{pathToStories}{storyTitle}.txt', 'x') as saveStory:
+                        saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
+                        break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
+                except:
+                    saveRequest = input('Oh, it looks like you\'ve aready completed this story. Would you like to keep your new version instead? ')
+                    if saveRequest == 'yes' or saveRequest == 'y':
+                        with open(rf'{pathToStories}{storyTitle}.txt', 'w') as saveStory:
+                            saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
+                            break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
+                    elif saveRequest == 'no' or saveRequest == 'n':
+                        tempInput = input('We\'ll keep the original, then. Press any key to return to exit.')
+                        break
             case 'no' | 'n':
-                print('you didn\'t save!')
-
+                saveRequest = input('Are you sure you don\'t want to save your story? Enter no or n again to confirm: ')
+                if saveRequest.lower == 'no' or 'n':
+                    break
+                else:
+                    continue
+            #case _: #Wildcard. Not really needed here as we're looping if the user doesn't enter yes, y, no, or n, but a match case statement feels incomplete without it.
+                #continue
 main()
 
 exit(0)
