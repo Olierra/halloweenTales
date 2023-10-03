@@ -53,22 +53,22 @@ def main():
             },
         '2': {
             'title':'The Best Costume of the Night',
-            'body':'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         },
         '3': {
             'title':'Family Pumpkin Carving',
-            'body':'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         },
         '4': {
             'title':'Scary Story Night',
-            'body' : 'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         },
         '5': {
             'title':'Baking Ghosts?!?',
-            'body':'lorem ipsum',
+            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
             'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
         }
     }
@@ -138,21 +138,26 @@ def replaceText(storyTitle, storyBody, userInputs, clear, pathToStories):
     system(clear)
     print(f'{newStoryBody}\n\n')
     
+    return (saveStory(storyTitle, newStoryBody, clear, pathToStories))
+
+def saveStory(storyTitle, newStoryBody, clear, pathToStories):
     saveRequest = ''
-    while not saveRequest.lower() == 'yes' or saveRequest.lower() == 'y' or saveRequest.lower() == 'no' or saveRequest.lower() == 'n':
+    while not (saveRequest.lower() == 'yes' or saveRequest.lower() == 'y' or saveRequest.lower() == 'no' or saveRequest.lower() == 'n'):
         saveRequest = input('Do you want to save? Enter yes or y to save, and no or n to not save: ')
         match saveRequest.lower(): #Python 3.10+ feature. Make sure you have the correct version before running this script.
             case 'yes' | 'y':
                 try:
                     with open(rf'{pathToStories}{storyTitle}.txt', 'x') as saveStory:
                         saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
-                        break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
+                        print(f'You saved {storyTitle} to {storyTitle}.txt')
+                    break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
                 except:
                     saveRequest = input('Oh, it looks like you\'ve aready completed this story. Would you like to keep your new version instead? ')
                     if saveRequest == 'yes' or saveRequest == 'y':
                         with open(rf'{pathToStories}{storyTitle}.txt', 'w') as saveStory:
                             saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
-                            break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
+                            print(f'You replaced the old story of {storyTitle} with your new version.')
+                        break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
                     elif saveRequest == 'no' or saveRequest == 'n':
                         tempInput = input('We\'ll keep the original, then. Press any key to return to exit.')
                         break
@@ -162,8 +167,20 @@ def replaceText(storyTitle, storyBody, userInputs, clear, pathToStories):
                     break
                 else:
                     continue
-            #case _: #Wildcard. Not really needed here as we're looping if the user doesn't enter yes, y, no, or n, but a match case statement feels incomplete without it.
-                #continue
+            case _: #Wildcard. Not really needed here as we're looping if the user doesn't enter yes, y, no, or n, but a match case statement feels incomplete without it.
+                continue
+    menuChoice = ''
+    while not (menuChoice.lower() == '1' or menuChoice.lower() == '2'):
+        system(clear)
+        print('1. Return to main menu.\n2. Exit\n\n')
+        menuChoice = input('Please choose an option from above: ')
+        match menuChoice.lower():
+            case '1':
+                main()
+            case '2':
+                return 0
+    return 0
+
 main()
 
 exit(0)
