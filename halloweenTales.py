@@ -8,23 +8,38 @@
 
 """
     #TODO
-    #Create menu to choose a story, start a random story, read saved stories, or exit.
-    #Ask the user to choose menu option, clear the screen, then open menu, based on option choice.
-    #On Choose a Story, List some general ideas of the story (not the full story), then let the user pick one.
-    #On Start a Random Story, use random.choice() to pick a story, then start asking the user for inputs.
     #On Read Saved Stories, list the name of the stories and ask the user to pick one, then display the story.
-    #On Exit, exit with a 0 status.
     #Ensure proper return and exit values.
-    #Wrap anything that can break in try/except to catch errors.
 """
 
-import random
-from re import T
-from sys import exit
-from os import system
+from sys import exit, platform
+from os import system, path
 from random import choice
 
 def main():
+    clear = ''
+    user = ''
+    if platform == "Linux": #Thanks Stack Overflow: https://stackoverflow.com/questions/8220108/how-do-i-check-the-operating-system-in-python and Section.io: https://www.section.io/engineering-education/how-to-execute-linux-commands-in-python/
+        clear = 'clear'
+        chmod = 'chmod 755 ./halloweenTales.py'
+        system(chmod)
+        user = system('whoami')
+        pathToStories = f'/home/{user}/stories/'
+        if not path.exists(pathToStories):
+            system(f'mkdir /home/{user}/stories/')
+            system(f'chmod 744 /home/{user}/stories/')
+    else:
+        clear = 'cls'
+        pathToStories = path.expanduser('~\\Documents\\stories')
+        if path.exists(path.expanduser('~\\OneDrive\\Documents\\')): #Checking if the user is using OneDrive to backup Documents. We'll put the stories in there if they are.
+            if not path.exists(path.expanduser('~\\OneDrive\\Documents\\stories')):
+                pathToStories = path.expanduser('~\\OneDrive\\Documents\\stories')
+                print(pathToStories)
+                system(f'md {pathToStories}')
+        elif not path.exists('~\\Documents\\stories'): #Otherwise, we're saving them in the old Documents folder.
+            pathToStories = path.expanduser('~\\Documents\\stories')
+            system(f'md {pathToStories}')
+    
     storyList = {
         '1': {
             'title':'The Case of the Missing Candy',
@@ -56,63 +71,76 @@ def main():
     menuRange = range(1,5)
     userChoice = 0
     while int(userChoice) not in menuRange: #while the user hasn't chose a number between 1 and 4, keep reprinting the menu
-        system('cls') #clears the screen. Make sure you start without debugging or it doesn't work.
+        system(clear) #clears the screen. Make sure you start without debugging or it doesn't work.
         print(menu)
         try:
             userChoice = int(input('Please choose an option from the menu: ')) #Any value here not a number throws the error we're catching below.
         except:
             continue #Sends the user back to the menu until they enter a number on the menu.
     if userChoice == 1:
-        system('cls')
-        storyMenu(storyList)
+        print(clear)
+        system(clear)
+        storyMenu(storyList, clear)
     elif userChoice == 2:
-        system('cls')
-        getUserText(storyList[choice(list(storyList))])
+        system(clear)
+        getUserText(storyList[choice(list(storyList))], clear)
     elif userChoice == 3:
-        system('cls')
-        storyList()
+        system(clear)
+        storyList(clear)
     elif userChoice == 4:
         print('Goodbye!')
         exit(0)
     return 0
 
-def storyMenu(storyList):
+def storyMenu(storyList, clear):
     stories = storyList
     storyRange = range(1,(len(stories)+1))
     storyChoice = 0
     print('Available Stories\n')
     while int(storyChoice) not in storyRange:
-        system('cls')
+        system(clear)
         for story in stories:
             print(story + '. ' + str(stories[story]['title']))
         try:
             storyChoice = int(input('\nPlease choose a story: '))
         except:
             continue
-    return getUserText(stories[str(storyChoice)])
+    return getUserText(stories[str(storyChoice)], clear)
     
-def storyList():
+def storyList(clear):
+    system(clear)
     print('You made it to the story list!')
 
-def getUserText(story):
+def getUserText(story, clear):
     userStoryTitle = story['title']
     userStoryBody = story['body']
     userDictionary = story['inputs']
     replacementList = {}
+    system(clear)
     print('Your story is: ' + userStoryTitle + '\n')
 
     for key in userDictionary:
         tempInput = input(f'Please enter ' + key + ": ")
         replacementList[key] = tempInput
         
-    return(replaceText(userStoryBody, replacementList))
+    return(replaceText(userStoryTitle, userStoryBody, replacementList, clear))
 
-def replaceText(story, userInputs):
-    originalText = story
+def replaceText(storyTitle, storyBody, userInputs, clear):
+    newStoryBody = storyBody
     replacementWords = userInputs
     for key in replacementWords:
-        originalText = originalText.replace(key, replacementWords[key])
-    return print(originalText)
+        newStoryBody = newStoryBody.replace(key, replacementWords[key])
+    system(clear)
+    print(newStoryBody)
+    saveRequest = ''
+    while not saveRequest.lower == 'yes' or 'y' or 'no' or 'n':
+        system(clear)
+        saveRequest = input('Do you want to save? ')
+        match saveRequest.lower():
+            case 'yes' | 'y':
+                print('you saved!')
+            case 'no' | 'n':
+                print('you didn\'t save!')
 
 main()
 
