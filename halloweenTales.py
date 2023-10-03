@@ -45,31 +45,32 @@ def main():
             except:
                 pathToStories = path.expanduser('~\\Documents\\stories\\')
     
+    #To save time on this project, I've 'gracefully' lifted some stories from Woo Jr. Link: https://woojr.com/halloween-ad-libs/ Note: These are not mine and would be replaced in a final version.
     storyList = {
-        '1': {
-            'title':'The Case of the Missing Candy',
-            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
-            'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
+        '1': { #https://woojr.com/wp-content/uploads/2017/10/mad-scientist-adlib-print.jpg
+            'title':'My Substitute Teacher is a Mad Scientist',
+            'body':'Today we had a substitute teacher for science class, with a color hair that a verb (past tense) straight up a number inches high. His name was Mr. an animal and he said he\'d show us why science was the most an adjective class. First, he used a a tool and a a vegetable to make a a container of water turn another color. Then he made a a noun of the solar system using a fruit, a candy, and another noun. When the principal walked by and saw the substitute teacher using a third noun to a verb the some furniture into a third color a plural noun, she asked him to show the class a movie about another plural noun instead. The next day, we had a different substitute teacher.',
+            'inputs': {'a color':'PH1','a verb (past tense)':'PH2','a number':'PH3','an animal':'PH4','an adjective':'PH5','a tool':'PH6','a vegetable':'PH7','a container':'PH8','another color':'PH9','a noun':'PH10','a fruit':'PH11','a candy':'PH12','another noun':'PH13','a third noun':'PH14','a verb':'PH15','some furniture':'PH16','a third color':'PH17','a plural noun':'PH18','another plural noun':'PH19'}
             },
-        '2': {
-            'title':'The Best Costume of the Night',
-            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
-            'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
+        '2': { #https://woojr.com/wp-content/uploads/2017/10/skeletons-ad-libs-for-kids.jpg
+            'title':'Best Halloween Costume Contest',
+            'body':'This year a place is having an adjective Halloween Costume Contest. I hope I win; I\'m going to dress up as a another adjective a noun. My best friend is going to be a a third adjective a color an animal and my cousin is going to be a a fourth adjective another noun. They have a a fifth adjective party and everyone in town shows up to a verb all of the a sixth adjective costumes. We play games, like bobbing for apples and another verbing a plural noun and it is so much fun!',
+            'inputs': {'a place':'PH1','an adjective':'PH2','another adjective':'PH3','a noun':'PH4','a third adjective':'PH5','a color':'PH6','an animal':'PH7','a fourth adjective':'PH8','another noun':'PH9','a fifth adjective':'PH0','a verb':'PH11','a sixth adjective':'PH12','another verb':'PH13','a plural noun':'PH14'}
         },
-        '3': {
-            'title':'Family Pumpkin Carving',
-            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
-            'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
+        '3': { #https://woojr.com/wp-content/uploads/2017/10/ad-libs-for-Halloween.jpg
+            'title':'My School Gets Pretty Weird at Halloween',
+            'body':'My school is pretty an adjective for most of the year, except in late October, when another adjective cobwebs appear in the hallway, with really a third adjective an animals hanging from them. The lunch room has orange and black a plural noun everywhere, and they serve roasted a part of the body for lunch. Someone told me that a giant a fourth noun another animal took over the principal\'s office. All of the teachers look different; one is a zombie with a color hair, another is a a fifth adjective a noun, and I think my school subject teacher is a a vehicle now. Tombstones line the hallways, and one says "Here lies a name of someone in the room, who died of a verbing."',
+            'inputs': {'an adjective':'PH1','another adjective':'PH2','a third adjective':'PH3','an animal':'PH4','a plural noun':'PH5','a part of the body':'PH6','a fourth adjective':'PH7','another animal':'PH8','a color':'PH9','a fifth adjective':'PH10','a noun':'PH11','school subject':'PH12','a vehicle':'PH13','a name of someone in the room':'PH14','a verb':'PH15'}
         },
-        '4': {
-            'title':'Scary Story Night',
-            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
-            'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
+        '4': { #https://woojr.com/wp-content/uploads/2017/10/scary-halloween-ad-lib.jpg
+            'title':'A Scary Halloween Story',
+            'body':'They say my school is haunted; my an adjective friend a first name says she saw a another adjective a noun floating at the end of the hall near the cafeteria. Some say if you a verb down the hallway at night, you\'ll hear an animal another verbing an adverb. My a third adjective friend another first name saw a fourth adjective another noun a thrid verbing under one of the tables once. I hope I never see any a plural noun a forth verbing; eating lunch is scary enough!',
+            'inputs': {'an adjective':'PH1','a first name':'PH2','another adjective':'PH3','a noun':'PH4','a verb':'PH5','an animal':'PH6','another verb':'PH7','an adverb':'PH8','a third adjective':'PH9','another first name':'PH10','a fourth adjective':'PH11','another noun':'PH12','a third verb':'PH13','a plural noun':'PH14','a fourth verb':'PH15'}
         },
-        '5': {
-            'title':'Baking Ghosts?!?',
-            'body':'lorem ipsum PH1 PH2 PH3 PH4 PH5 PH6 PH7 PH8 PH9',
-            'inputs': {'PH1':'text','PH2':'text','PH2':'text','PH3':'text','PH4':'text','PH5':'text','PH6':'text','PH7':'text','PH8':'text','PH9':'text'}
+        '5': { #https://woojr.com/wp-content/uploads/2017/10/halloween-adlibs.jpg
+            'title':'Halloween Treats',
+            'body':'Halloween is the best time to a verb. the weather is an adjective and another adjective and you go door to door, saying "Trick or Treat!" and people give you a plural noun and another plural noun to eat. This year, I will dress up as a a noun, a a third adjective a color another noun, or maybe a a fourth adjective an animal. If someone says "Trick!" instead of giving you a treat, you might have to another verb or a third verb to try and scare them into giving you a a fifth adjective a food or a a sixth adjective another food as a treat.',
+            'inputs': {'a verb':'PH1','an adjective':'PH2','another adjective':'PH3','a plural noun':'PH4','another plural noun':'PH5','a noun':'PH6','a third adjective':'PH7','a color':'PH8','another noun':'PH9','a fourth adjective':'PH10','an animal':'PH11','another verb':'PH12','a third verb':'PH13','a fifth adjective':'PH14','a food':'PH15','a sixth adjective':'PH16','another food':'PH17'}
         }
     }
     menu = 'Welcome to Halloween Tales\n\n1. Choose a Story.\n2. Start a Random Story.\n3. Read a Finished Story.\n4. Exit\n'
