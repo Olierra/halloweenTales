@@ -14,8 +14,9 @@
 """
 
 from sys import exit, platform
-from os import listdir, system, path
+from os import listdir, system, path, replace
 from random import choice
+from datetime import date
 
 def main():
     clear = ''
@@ -204,19 +205,28 @@ def saveStory(storyTitle, newStoryBody, clear, pathToStories, pathToLogs):
         saveRequest = input('Do you want to save? Enter yes or y to save, and no or n to not save: ')
         match saveRequest.lower(): #Python 3.10+ feature. Make sure you have the correct version before running this script.
             case 'yes' | 'y':
+                today = date.today()
                 try:
                     with open(rf'{pathToStories}{storyTitle}.txt', 'x') as saveStory:
                         saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
                         print(f'You saved "{storyTitle}" to {storyTitle}.txt\n')
+                    if platform == 'Linux':
+                        system(f'touch {pathToLogs}{today}.log')
+                    system(f'echo Saved "{storyTitle}" to {pathToStories}{storyTitle}.txt >> {pathToLogs}{today}_history.log')                        
                     break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
                 except:
                     saveRequest = input('Oh, it looks like you\'ve aready completed this story. Would you like to keep your new version instead? ')
                     if saveRequest.lower() == 'yes' or saveRequest.lower() == 'y':
                         if platform == 'Linux':
-                            system(f'mv {pathToStories}{storyTitle}.txt {pathToLogs}{storyTitle}.bak')
+                            system(f'mv {pathToStories}{storyTitle}.txt {pathToLogs}{today}{storyTitle}.bak')
+                            system(f'touch {pathToLogs}{today}.log')
+                            system(f'echo Saved "{storyTitle}" to {pathToStories}{storyTitle}.txt >> {pathToLogs}{today}_history.log')
+                        else:
+                            replace(f'{pathToStories}{storyTitle}.txt', f'{pathToLogs}{today}{storyTitle}.bak')
+                            system(f'echo Saved "{storyTitle}" to {pathToStories}{storyTitle}.txt >> {pathToLogs}{today}_history.log')
                         with open(rf'{pathToStories}{storyTitle}.txt', 'w') as saveStory:
                             saveStory.write(f'{storyTitle}\n\n{newStoryBody}')
-                            print(f'You replaced the old story of {storyTitle} with your new version.')
+                            print(f'\nYou replaced the old story of "{storyTitle}" with your new version.')
                         break #I don't know why I need this break, as the value of saveRequest should break the user out of the loop, but here we are....
                     elif saveRequest.lower() == 'no' or saveRequest.lower() == 'n':
                         tempInput = input('We\'ll keep the original, then. Press enter to continue.')
